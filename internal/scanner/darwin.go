@@ -19,7 +19,12 @@ func New() (Scanner, error) {
 
 // Scan uses lsof to discover listening TCP and UDP ports on macOS.
 func (d *darwinScanner) Scan() ([]PortInfo, error) {
-	out, err := exec.Command("lsof", "-iTCP", "-iUDP", "-nP", "-sTCP:LISTEN").Output()
+	lsofPath := "lsof"
+	if _, err := exec.LookPath("lsof"); err != nil {
+		// lsof is commonly at /usr/sbin/lsof on macOS but may not be in PATH
+		lsofPath = "/usr/sbin/lsof"
+	}
+	out, err := exec.Command(lsofPath, "-iTCP", "-iUDP", "-nP", "-sTCP:LISTEN").Output()
 	if err != nil {
 		// lsof may exit non-zero if some files can't be accessed (permission)
 		if out == nil || len(out) == 0 {
