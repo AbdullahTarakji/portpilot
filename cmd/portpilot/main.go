@@ -147,7 +147,7 @@ func killCmd() *cobra.Command {
 			if !force {
 				fmt.Printf("Kill %q (PID %d) on port %d? [y/N] ", target.ProcessName, target.PID, target.Port)
 				var answer string
-				fmt.Scanln(&answer)
+				_, _ = fmt.Scanln(&answer)
 				if strings.ToLower(answer) != "y" {
 					fmt.Println("Cancelled.")
 					return nil

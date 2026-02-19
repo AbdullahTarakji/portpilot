@@ -107,7 +107,9 @@ func TestLoadFromMissing(t *testing.T) {
 func TestLoadFromFile(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "config.yaml")
-	os.WriteFile(path, []byte("refresh_interval: 10\n"), 0644)
+	if err := os.WriteFile(path, []byte("refresh_interval: 10\n"), 0644); err != nil {
+		t.Fatalf("failed to write test config: %v", err)
+	}
 
 	cfg, err := LoadFrom(path)
 	if err != nil {

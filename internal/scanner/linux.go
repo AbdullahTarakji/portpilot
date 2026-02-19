@@ -21,7 +21,7 @@ func New() (Scanner, error) {
 func (l *linuxScanner) Scan() ([]PortInfo, error) {
 	out, err := exec.Command("ss", "-tulnp").Output()
 	if err != nil {
-		if out == nil || len(out) == 0 {
+		if len(out) == 0 {
 			return nil, fmt.Errorf("running ss: %w", err)
 		}
 	}
