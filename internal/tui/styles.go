@@ -12,8 +12,7 @@ var (
 	colorCyan    = lipgloss.Color("#8BE9FD")
 	colorWhite   = lipgloss.Color("#F8F8F2")
 	colorDim     = lipgloss.Color("#6272A4")
-	colorBg      = lipgloss.Color("#282A36")
-	colorBgAlt   = lipgloss.Color("#44475A")
+	colorBgAlt = lipgloss.Color("#44475A")
 
 	// Header
 	headerStyle = lipgloss.NewStyle().
@@ -46,9 +45,6 @@ var (
 				Background(colorBgAlt).
 				Foreground(colorWhite).
 				Bold(true)
-
-	normalRowStyle = lipgloss.NewStyle().
-			Foreground(colorWhite)
 
 	// Row coloring
 	conflictStyle = lipgloss.NewStyle().
