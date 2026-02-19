@@ -1,5 +1,5 @@
 # Binaries
-portpilot
+/portpilot
 *.exe
 *.dll
 *.so
