@@ -1,17 +1,11 @@
 Output demo.gif
 
-Set FontSize 14
+Set FontSize 16
 Set Width 1200
 Set Height 600
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 50ms
 Set Padding 20
-
-# Title
-Type "# 🚀 PortPilot — See what's running on your ports"
-Enter
-Sleep 1s
-Ctrl+L
 
 # Show the list command
 Type "portpilot list"
