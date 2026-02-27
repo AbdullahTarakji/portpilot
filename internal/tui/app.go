@@ -169,17 +169,12 @@ func (m Model) handleTableKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "g":
 		m.showGroups = !m.showGroups
 		return m, nil
-	case "k":
-		if len(filtered) > 0 && m.cursor < len(filtered) {
-			m.view = viewConfirmKill
-		}
-		return m, nil
 	case "enter":
 		if len(filtered) > 0 && m.cursor < len(filtered) {
 			m.view = viewDetail
 		}
 		return m, nil
-	case "up":
+	case "up", "k":
 		if m.cursor > 0 {
 			m.cursor--
 		}
@@ -196,6 +191,11 @@ func (m Model) handleTableKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		} else {
 			m.sortCol.column = col
 			m.sortCol.asc = true
+		}
+		return m, nil
+	case "K":
+		if len(filtered) > 0 && m.cursor < len(filtered) {
+			m.view = viewConfirmKill
 		}
 		return m, nil
 	case "esc":
@@ -348,7 +348,7 @@ func (m Model) renderStatusBar() string {
 	hints := []string{
 		statusKeyStyle.Render("?") + " help",
 		statusKeyStyle.Render("/") + " filter",
-		statusKeyStyle.Render("k") + " kill",
+		statusKeyStyle.Render("K") + " kill",
 		statusKeyStyle.Render("q") + " quit",
 	}
 	right := strings.Join(hints, "  ")

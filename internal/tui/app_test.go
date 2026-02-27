@@ -234,8 +234,8 @@ func TestDetailViewToggle(t *testing.T) {
 func TestConfirmKillView(t *testing.T) {
 	m := newTestModel()
 
-	// Press 'k' to open kill confirmation
-	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")})
+	// Press 'shift+k' to open kill confirmation
+	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("K")})
 	m = updated.(Model)
 
 	if m.view != viewConfirmKill {
@@ -353,6 +353,27 @@ func TestViewRenderWithFilter(t *testing.T) {
 	}
 }
 
+func TestKNavigationUp(t *testing.T) {
+	m := newTestModel()
+
+	// Move cursor to position 3
+	for i := 0; i < 3; i++ {
+		updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyDown})
+		m = updated.(Model)
+	}
+	if m.cursor != 3 {
+		t.Fatalf("setup: cursor should be at 3, got %d", m.cursor)
+	}
+
+	// Press 'k' to move up
+	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")})
+	m = updated.(Model)
+
+	if m.cursor != 2 {
+		t.Errorf("cursor after 'k': got %d, want 2", m.cursor)
+	}
+}
+
 func TestEmptyPortsList(t *testing.T) {
 	s := &mockScanner{ports: nil}
 	cfg := config.DefaultConfig()
@@ -375,7 +396,7 @@ func TestEmptyPortsList(t *testing.T) {
 	}
 
 	// Kill on empty should not crash
-	updated, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")})
+	updated, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("K")})
 	m = updated.(Model)
 	if m.view != viewTable {
 		t.Error("kill on empty list should stay on table view")
