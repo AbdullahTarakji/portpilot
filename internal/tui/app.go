@@ -184,7 +184,7 @@ func (m Model) handleTableKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.cursor++
 		}
 		return m, nil
-	case "1", "2", "3", "4", "5", "6", "7", "8":
+	case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 		col := int(msg.String()[0] - '1')
 		if m.sortCol.column == col {
 			m.sortCol.asc = !m.sortCol.asc

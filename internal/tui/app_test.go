@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -22,10 +23,10 @@ func (m *mockScanner) Scan() ([]scanner.PortInfo, error) {
 
 func testPorts() []scanner.PortInfo {
 	return []scanner.PortInfo{
-		{Port: 3000, Protocol: "TCP", PID: 100, ProcessName: "node", User: "mike", State: "LISTEN", CPU: 2.1, Mem: 1.3},
-		{Port: 5432, Protocol: "TCP", PID: 200, ProcessName: "postgres", User: "mike", State: "LISTEN", CPU: 0.1, Mem: 0.5},
-		{Port: 6379, Protocol: "TCP", PID: 300, ProcessName: "redis-ser", User: "mike", State: "LISTEN", CPU: 0.0, Mem: 0.1},
-		{Port: 8080, Protocol: "TCP", PID: 400, ProcessName: "Python", User: "mike", State: "LISTEN", CPU: 55.0, Mem: 12.0},
+		{Port: 3000, Protocol: "TCP", PID: 100, ProcessName: "node", User: "mike", State: "LISTEN", CPU: 2.1, Mem: 1.3, Command: "node server.js"},
+		{Port: 5432, Protocol: "TCP", PID: 200, ProcessName: "postgres", User: "mike", State: "LISTEN", CPU: 0.1, Mem: 0.5, Command: "/usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main"},
+		{Port: 6379, Protocol: "TCP", PID: 300, ProcessName: "redis-ser", User: "mike", State: "LISTEN", CPU: 0.0, Mem: 0.1, Command: "redis-server *:6379"},
+		{Port: 8080, Protocol: "TCP", PID: 400, ProcessName: "Python", User: "mike", State: "LISTEN", CPU: 55.0, Mem: 12.0, Command: "python3 -m http.server 8080"},
 	}
 }
 
@@ -371,6 +372,41 @@ func TestKNavigationUp(t *testing.T) {
 
 	if m.cursor != 2 {
 		t.Errorf("cursor after 'k': got %d, want 2", m.cursor)
+	}
+}
+
+func TestCmdColumnInView(t *testing.T) {
+	m := newTestModel()
+	output := m.View()
+
+	if !strings.Contains(output, "Cmd") {
+		t.Error("View() should contain 'Cmd' column header")
+	}
+	if !strings.Contains(output, "node server.js") {
+		t.Error("View() should contain command text 'node server.js'")
+	}
+}
+
+func TestSortByColumn9(t *testing.T) {
+	m := newTestModel()
+
+	// Press '9' to sort by Cmd column
+	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("9")})
+	m = updated.(Model)
+
+	if m.sortCol.column != 8 {
+		t.Errorf("sortCol: got %d, want 8", m.sortCol.column)
+	}
+	if !m.sortCol.asc {
+		t.Error("expected sort asc for new column")
+	}
+
+	// Press '9' again to toggle desc
+	updated, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("9")})
+	m = updated.(Model)
+
+	if m.sortCol.asc {
+		t.Error("expected sort desc after pressing same column again")
 	}
 }
 

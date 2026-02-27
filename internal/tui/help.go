@@ -8,7 +8,7 @@ type helpEntry struct {
 }
 
 var helpEntries = []helpEntry{
-	{"1-8", "Sort by column (toggle asc/desc)"},
+	{"1-9", "Sort by column (toggle asc/desc)"},
 	{"/", "Search / filter by port or process"},
 	{"Esc", "Clear search / close panel"},
 	{"Enter", "View process details"},
