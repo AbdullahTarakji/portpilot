@@ -27,7 +27,7 @@ func (d *darwinScanner) Scan() ([]PortInfo, error) {
 	out, err := exec.Command(lsofPath, "-iTCP", "-iUDP", "-nP", "-sTCP:LISTEN").Output()
 	if err != nil {
 		// lsof may exit non-zero if some files can't be accessed (permission)
-		if out == nil || len(out) == 0 {
+		if len(out) == 0 {
 			return nil, fmt.Errorf("running lsof: %w", err)
 		}
 	}
