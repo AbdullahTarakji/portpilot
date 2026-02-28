@@ -25,6 +25,7 @@ var columns = []column{
 	{"CPU%", 7},
 	{"Mem%", 7},
 	{"State", 8},
+	{"Cmd", 0}, // 0 = auto-width, uses remaining space
 }
 
 type sortOrder struct {
@@ -40,23 +41,22 @@ func renderTable(ports []scanner.PortInfo, cursor int, sortCol sortOrder, filter
 	// Detect conflicts (same port, different PID)
 	conflicts := findConflicts(sorted)
 
-	// Calculate dynamic process column width
+	// Calculate dynamic column widths for Process and Cmd
 	remainingWidth := width - 4 // borders/padding
 	fixedWidth := 0
 	for i, c := range columns {
-		if i != 3 { // skip Process column
+		if i != 3 && i != 8 { // skip Process and Cmd columns
 			fixedWidth += c.width + 2 // +2 for padding
 		}
 	}
 	if showGroups {
 		fixedWidth += 12 // group column
 	}
-	processWidth := remainingWidth - fixedWidth
-	if processWidth < 10 {
-		processWidth = 10
-	}
-	if processWidth > 30 {
-		processWidth = 30
+	processWidth := 16 // fixed width for Process
+	available := remainingWidth - fixedWidth - processWidth - 2 - 2 // -2 padding each for Process and Cmd
+	cmdWidth := available
+	if cmdWidth < 10 {
+		cmdWidth = 10
 	}
 
 	// Header
@@ -65,6 +65,8 @@ func renderTable(ports []scanner.PortInfo, cursor int, sortCol sortOrder, filter
 		w := c.width
 		if i == 3 {
 			w = processWidth
+		} else if i == 8 {
+			w = cmdWidth
 		}
 		title := c.title
 		if i == sortCol.column {
@@ -100,12 +102,15 @@ func renderTable(ports []scanner.PortInfo, cursor int, sortCol sortOrder, filter
 			fmt.Sprintf("%.1f", p.CPU),
 			fmt.Sprintf("%.1f", p.Mem),
 			p.State,
+			truncate(p.Command, cmdWidth),
 		}
 
 		for j, v := range values {
 			w := columns[j].width
 			if j == 3 {
 				w = processWidth
+			} else if j == 8 {
+				w = cmdWidth
 			}
 			cell := lipgloss.NewStyle().Width(w).Padding(0, 1).Render(v)
 			cells = append(cells, cell)
@@ -194,6 +199,8 @@ func sortPorts(ports []scanner.PortInfo, so sortOrder) []scanner.PortInfo {
 			less = sorted[i].Mem < sorted[j].Mem
 		case 7:
 			less = sorted[i].State < sorted[j].State
+		case 8:
+			less = strings.ToLower(sorted[i].Command) < strings.ToLower(sorted[j].Command)
 		default:
 			less = sorted[i].Port < sorted[j].Port
 		}

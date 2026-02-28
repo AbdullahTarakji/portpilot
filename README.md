@@ -30,6 +30,12 @@ PortPilot gives you a single command to see everything running on your ports —
 - 📦 **JSON Output** — Pipe to `jq`, scripts, or other tools
 - 🖥️ **Cross-Platform** — macOS and Linux support
 
+## 🎬 Demo
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AbdullahTarakji/portpilot/main/demo.gif" alt="PortPilot Demo" width="800">
+</p>
+
 ## 📦 Installation
 
 ### Go Install

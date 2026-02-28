@@ -8,17 +8,17 @@ type helpEntry struct {
 }
 
 var helpEntries = []helpEntry{
-	{"1-8", "Sort by column (toggle asc/desc)"},
+	{"1-9", "Sort by column (toggle asc/desc)"},
 	{"/", "Search / filter by port or process"},
 	{"Esc", "Clear search / close panel"},
 	{"Enter", "View process details"},
-	{"k", "Kill selected process"},
+	{"K", "Kill selected process"},
 	{"r", "Manual refresh"},
 	{"g", "Toggle group view"},
 	{"?", "Toggle this help"},
 	{"q", "Quit"},
 	{"Up/Down", "Navigate rows"},
-	{"j/k nav", "Vim-style navigation (when not killing)"},
+	{"j/k nav", "Vim-style navigation"},
 }
 
 func renderHelp(width int) string {
